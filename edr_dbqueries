@@ -1,0 +1,80 @@
+create table edr.clientinfo (id INT primary key, clientid varchar(250), description varchar(250));
+
+insert into edr.clientinfo (id, clientid, description) values (1, 'Web', 'Web users like netbanking');
+insert into edr.clientinfo (id, clientid, description) values (2, 'Mobile', 'Mobile users like netbanking');
+
+select * from edr.clientinfo;
+
+create table edr.channelinfo (id INT primary key, channelid varchar(250), description varchar(250));
+
+insert into edr.channelinfo (id, channelid, description) values (1, 'Online', 'Online Customers');
+insert into edr.channelinfo (id, channelid, description) values (2, 'Offline', 'Offline Customers');
+
+select * from edr.channelinfo;
+
+create table edr.customerinfo (customerid INT primary key, firstname varchar(250), lastname varchar(250), 
+mobilenumber varchar(15), emailid varchar(250), cardnumber varchar(15), cvv varchar(5), expiredate varchar(250),
+nameoncard varchar(250), status varchar(25), description varchar(250));
+
+insert into edr.customerinfo(customerid, firstname, lastname, mobilenumber, emailid, cardnumber, 
+cvv, expiredate, nameoncard, status, description) values (1, 'rbm', 'soft', '7799434634', 'rbmsoft@gmail.com',
+'0549 2683 3642', '869', '102028', 'RBMSOFT', 'Valid', 'this is a customer info');
+
+insert into edr.customerinfo(customerid, firstname, lastname, mobilenumber, emailid, cardnumber, 
+cvv, expiredate, nameoncard, status, description) values (2, 'venky', 'studio', '8885434534', 'venkystudio@gmail.com',
+'0758 1483 2663', '635', '102028', 'VENKYSTUDIO', 'Valid', 'this is a customer info');
+
+select * from edr.customerinfo;
+
+create table edr.rewardsinfo (id INT primary key, cardnumber varchar(250), availablepoints bigint, 
+earnedpoints bigint, adjustedpoints bigint, pendingpoints bigint);
+
+insert into edr.rewardsinfo (id, cardnumber, availablepoints, earnedpoints, adjustedpoints, pendingpoints) 
+values (1, '0549 2683 3642', 100000, 10000, 5000, 1000);
+
+insert into edr.rewardsinfo (id, cardnumber, availablepoints, earnedpoints, adjustedpoints, pendingpoints) 
+values (2, '0549 2683 3642', 200000, 2000, 1000, 1500);
+
+insert into edr.rewardsinfo (id, cardnumber, availablepoints, earnedpoints, adjustedpoints, pendingpoints) 
+values (3, '0758 1483 2663', 300000, 3000, 2000, 2000);
+
+select * from edr.rewardsinfo;
+
+CREATE PROCEDURE edr.GETREWARDS_V1 (
+	IN CLIENT_ID_IN VARCHAR(10),
+    IN CHANNEL_ID_IN VARCHAR(10),
+    IN CARDNUMBER_IN VARCHAR(25),
+    IN CVV_IN VARCHAR(10),
+    IN NAME_ON_CARD_IN VARCHAR(25),
+    IN EXPIRE_DATE_IN VARCHAR(25),
+    OUT RESPONSE_CODE_OUT VARCHAR(10),
+    OUT RESPONSE_MESSAGE_OUT VARCHAR(25))
+    
+PROC_LABEL:BEGIN
+		DECLARE CLIENT_ID_COUNT INT;
+		DECLARE CHANNEL_ID_COUNT INT;
+		DECLARE CARDNUMBER_COUNT INT;
+		DECLARE CVV_COUNT INT;
+	
+	SELECT COUNT(*) INTO CLIENT_ID_COUT FROM EDR.CLIENTIFO WHERE CLIENTID=CLIENT_ID_IN;
+		IF CLIENT_ID_IN == 0 THEN 
+			SET RESPONSE_CODE_OUT = 100;
+			SET RESPONSE_MESSAGE_OUT = "Invalid client id";
+	LEAVE PROC_LABEL;
+	END IF;
+    
+    SELECT COUNT(*) INTO CHANNEL_ID_COUNT FROM EDR.CHANNELINFO WHERE CHANNELID=CARDNUMBER_COUNT;
+		IF CLIENT_ID_IN == 0 THEN 
+			SET RESPONSE_CODE_OUT = 101;
+			SET RESPONSE_MESSAGE_OUT = "Invalid channel id";
+	LEAVE PROC_LABEL;
+	END IF;
+    
+    SELECT COUNT(*) INTO CARDNUMBER_COUN FROM EDR.CUSTOMERINFO WHERE CURDNUMBER=CARDNUMBER_IN;
+		IF CLIENT_ID_IN == 0 THEN 
+			SET RESPONSE_CODE_OUT = 102;
+			SET RESPONSE_MESSAGE_OUT = "Invalid card number";
+	LEAVE PROC_LABEL;
+	END IF;
+
+END
